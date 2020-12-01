@@ -21,6 +21,7 @@ class Person(val name: String) {
 
 //endregion
 
+
 //region 可见性修饰符
 //NOTICE：在 Kotlin 中有这四个可见性修饰符：private、 protected、 internal 和 public
 //internal指的是模块内可见，如果没有显式指定修饰符的话，默认可见性是 public
@@ -44,6 +45,7 @@ class Triangle : Shape() {
         super.draw()
     }
 }
+
 
 //region 单例模式、对象声明、对象表达式、伴生对象
 //NOTICE：在Kotlin中实现单例模式极其简单，将类声明改为对象声明即可，对象声明的初始化过程是线程安全的并且在首次访问时执行
@@ -82,6 +84,9 @@ button.addOnClickListener(object : OnClickListener {
 })
 
 //TODO Kotlin 1.4 新特性
+button.addOnClickListener {
+    println("on button clicked")
+}
 
 //NOTICE：类内部的对象声明可以用 companion 关键字标记，并且可以给这个伴生对象取名
 class MyClass {
