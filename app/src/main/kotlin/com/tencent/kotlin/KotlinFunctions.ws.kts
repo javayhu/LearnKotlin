@@ -96,12 +96,12 @@ println("printStringNTimesFun2:" + printStringNTimesFun2("hello", 3))
 //region 内部函数
 
 //在Kotlin中函数内部可以定义内部函数，局部函数可以访问外部函数的局部变量
-class Graph {
-    val vertices: List<Vertex> = emptyList()
-}
-
 class Vertex {
     val neighbors: List<Vertex> = emptyList()
+}
+
+class Graph {
+    val vertices: List<Vertex> = emptyList()
 }
 
 fun dfs(graph: Graph) {
@@ -122,22 +122,119 @@ fun dfs(graph: Graph) {
 //region 高阶函数
 
 //在Kotlin中，一个函数可以作为另一个函数的参数或者返回值
+fun calculate(x: Int, y: Int, operation: (Int, Int) -> Int): Int {
+    return operation(x, y)
+}
 
+val sumResult = calculate(4, 5, { a, b -> a + b })
+
+//当lambda表达式作为函数调用的最后一个参数的时候，可以将它挪出来
+val mulResult = calculate(4, 5) { a, b -> a * b }
+
+println("sumResult $sumResult, mulResult $mulResult")
+
+//将函数作为返回值的函数
+fun operation(): (Int, Int) -> Int {
+    return { a, b -> a + b }
+}
+
+val result1 = operation()(3, 4)
+val result2 = calculate(3, 4, operation())
+
+println("result1 $result1, result2 $result2")
 
 //endregion
 
 
-//region scope functions
+//region 特殊函数1：infix functions
+//https://kotlinlang.org/docs/reference/functions.html#infix-notation
+//Functions marked with the infix keyword can also be called using the infix notation (omitting the dot and the parentheses for the call)
 
+infix fun Int.times(str: String) = str.repeat(this)
+println(2 times "Bye ")
+
+infix fun String.times(number: Int) = this.repeat(number)
+println("Bye " times 2)
+
+val kvPair = "name" to "javayhu"
+val map = mapOf(kvPair, "company" to "tencent")
+println(map)
+
+//endregion
+
+
+//region 特殊函数2：operator functions
+
+operator fun Int.times(str: String) = str.repeat(this)
+println(2 * "Bye ")
+
+operator fun String.times(number: Int) = this.repeat(number)
+println("Bye " * 2)
+
+//endregion
+
+
+//region 特殊函数3：scope functions
 //https://kotlinlang.org/docs/reference/scope-functions.html
-// The Kotlin standard library contains several functions whose sole purpose is to execute a block of code within the context of an object.
-// When you call such a function on an object with a lambda expression provided, it forms a temporary scope.
-// In this scope, you can access the object without its name. Such functions are called scope functions.
-// There are five of them: let, run, with, apply, and also.
 
-// these functions do the same: execute a block of code on an object.
-// What's different is how this object becomes available inside the block and what is the result of the whole expression.
-apply {  }
+//1、Kotlin标准库中包含了一些这样的函数，它们的目的是针对某个对象创建一个"临时空间"(lambda语句块)，然后执行这段代码，在这个临时空间内可以不用使用变量名来访问这个对象
+//2、这些函数的共同点是都是在一个对象上执行一段代码，不同点是这个对象在代码块中如何引用以及这个代码块的返回值是什么
+//3、这样的函数主要有5个，分别是 let, run, with, apply, also
+
+//① let：内部使用it引用对象，返回值是lambda表达式的结果，常用于需要非空判断的场景
+fun printNonNull(str: String?) {
+    str?.let {
+        print("string is $it")
+    }
+}
+printNonNull(null)
+printNonNull("string for let function")
+
+//② run：跟let类似，但是它内部使用this引用对象，返回值是lambda表达式的结果
+fun getNullableLength(ns: String?) {
+    ns?.run {
+        println("$this length = $length")
+        length
+    }
+}
+getNullableLength(null)
+getNullableLength("")
+getNullableLength("string for run function")
+
+//③ with：内部使用this引用对象，返回值是lambda表达式的结果
+data class Configuration(var host:String, var port:Int)
+val configuration = Configuration("127.0.0.1", 12345)
+
+val pair = "first" to "second"
+//println("${pair.host}:${pair.port}")
+val withPair = with(pair) {
+    println("$first:$second")
+}
+
+//④ apply：内部使用this引用对象，返回值是调用对象本身，常用于需要给对象的多个属性赋值的场景
+val applyConfiguration = pair.apply {
+    first = "new first"
+    second = "new second"
+}
+
+//⑤ also：内部使用it引用对象，返回值是调用者本身，常用于需要做些side effect的场景(例如打日志)
+val alsoConfiguration = pair.also {
+    println("${it.first}:${it.second}")
+}
+
+//链起来
+val chainConfiguration = configuration.apply {
+    host = "127.0.0.1"
+    port = 88888
+}.also {
+    println("${it.host}:${it.port}")
+}.let {
+    it.port++
+    it
+}
+println("${chainConfiguration.host}:${chainConfiguration.port}")
+
+//endregion
 
 
 //endregion

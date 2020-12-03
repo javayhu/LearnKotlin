@@ -9,16 +9,9 @@
 //region if表达式
 
 //NOTICE：在Java中if是条件语句，没有返回值；在Kotlin中if是表达式，有返回值的
-//传统写法
-var a = 1
-var b = 2
-var max = a
-if (b > a) max = b
-
-//Kotlin写法
 var max2 = if (b > a) b else a
 
-//语句块的最后一个表达式即为返回值
+//表达式的最后一行语句的值即为表达式的返回值
 var max3 = if (b > a) {
     println("b is bigger")
     b
@@ -87,5 +80,6 @@ do {
 println(k)
 
 //endregion
+
 
 //endregion

@@ -1,15 +1,19 @@
-
 //region Kotlin基础4-类与对象
 
 //region 类的生命方式
-//NOTICE：类声明由类名、类头（指定其类型参数、主构造函数等）以及由花括号包围的类体构成
-class Animal public constructor(name: String) {
+
+//在 Kotlin 中，类声明由类名、类头（指定其类型参数、主构造函数等）以及由花括号包围的类体构成
+public class Empty constructor() {               // 1、2、3、4
 }
+
+//class Empty
 
 //1、如果一个类没有类体，可以省略花括号
 //2、如果主构造函数没有任何注解或者可见性修饰符，可以省略这个 constructor 关键字
+//3、在 Kotlin 中有这四个可见性修饰符：public、 private、 protected 和 internal
+//4、internal指的是模块内可见，如果没有显式指定修饰符的话，默认可见性是 public
 
-//在 Kotlin 中的一个类可以有一个主构造函数以及一个或多个次构造函数
+//一个类可以有一个 主构造函数 以及一个或多个 次构造函数
 class Person(val name: String) {
     val children: MutableList<Person> = mutableListOf()
 
@@ -22,13 +26,9 @@ class Person(val name: String) {
 //endregion
 
 
-//region 可见性修饰符
-//NOTICE：在 Kotlin 中有这四个可见性修饰符：private、 protected、 internal 和 public
-//internal指的是模块内可见，如果没有显式指定修饰符的话，默认可见性是 public
-
-
 //region 类的继承
-//NOTICE：Kotlin力求清晰显式，所以允许被继承的类和允许被重写的方法需要使用open修饰(默认是final)
+
+//NOTICE：Kotlin力求清晰显式，所以 允许被继承的类 和 允许被重写的方法 需要使用 open 修饰(默认是final)，重写的方法也一定要有 override 修饰
 open class Shape {
     open fun draw() {
     }
@@ -46,64 +46,143 @@ class Triangle : Shape() {
     }
 }
 
+//endregion
 
-//region 单例模式、对象声明、对象表达式、伴生对象
-//NOTICE：在Kotlin中实现单例模式极其简单，将类声明改为对象声明即可，对象声明的初始化过程是线程安全的并且在首次访问时执行
+
+//region 特殊类1：data classes
+
+//Kotlin中的数据类(data class)类似Java中的POJO，Kotlin自动生成getter/setter/toString/hashCode/equals/componenN等方法
+
+data class User(val id: Int, val name: String)
+
+fun createUser(id: Int, name: String) = User(id, name)
+
+val (id, name) = createUser(1, "javayhu")
+println("user id:$id, name:$name")
+
+//endregion
+
+
+//region 特殊类2：sealed classes
+
+//Kotlin中可以将一个类声明为sealed，那么这个类是可以被继承的，而且继承它的子类都在这个sealed类声明的文件里面
+//Once you declare a class sealed, it can only be subclassed from inside the same file where the sealed class is declared.
+
+sealed class Mammal(val name: String)
+class Cat(val catName: String) : Mammal(catName)
+class Human(val humanName: String) : Mammal(humanName)
+
+fun greetMammal(mammal: Mammal): String {
+    when (mammal) {
+        is Human -> return "Hello ${mammal.name}"
+        is Cat -> return "Hello ${mammal.name}"
+    }
+}
+greetMammal(Human("javayhu"))
+//error: a 'return' expression required in a function with a block body ('{...}')
+//FIXME：脚本文件内没法演示sealed classes => KotlinFeatures.kt
+
+//endregion
+
+
+//region 单例模式（对象声明）
+
 object DatabaseManager {
     init {
         println("DatabaseManager object init")
     }
+
     fun init() {
         println("DatabaseManager call init ")
     }
-
-    fun destroy() {
-        println("DatabaseManager call destroy")
-    }
 }
-
 DatabaseManager.init()
+DatabaseManager.init()
+//1、在Kotlin中实现单例模式极其简单，将类声明改为对象声明即可
+//2、对象声明的初始化过程是线程安全的并且在首次访问时执行
+//3、object可以理解为 "只有一个实例对象的类"
 
-//NOTICE：当我们需要创建一个继承自某个（或某些）类型的匿名类的对象时可以使用对象表达式
-interface OnClickListener {
+//endregion
+
+
+//region 对象表达式
+
+//NOTICE：当我们需要创建一个继承自某个（或某些）类型的 匿名类的对象 时可以使用 对象表达式 (类似Java中的匿名内部类)
+fun interface OnClickListener {
     fun onClick()
 }
 
 class Button {
     var listener: OnClickListener? = null
-    fun addOnClickListener(listener: OnClickListener) {
+    fun addOnClickListener(listener: OnClickListener?) {
         this.listener = listener
+    }
+
+    fun triggerClick() {
+        listener?.onClick()
     }
 }
 
 val button = Button()
 button.addOnClickListener(object : OnClickListener {
     override fun onClick() {
-        println("on button clicked")
+        println("on button clicked 1")
     }
 })
+button.triggerClick()
 
-//TODO Kotlin 1.4 新特性
+//NOTICE：Kotlin 1.4 新特性 SAM conversions for Kotlin interfaces
+//https://kotlinlang.org/docs/reference/whatsnew14.html#sam-conversions-for-kotlin-interfaces
+//Type mismatch: inferred type is () -> Unit but KotlinClasses_ws.OnClickListener? was expected
 button.addOnClickListener {
-    println("on button clicked")
+    println("on button clicked 2")
 }
+button.triggerClick()
 
-//NOTICE：类内部的对象声明可以用 companion 关键字标记，并且可以给这个伴生对象取名
+
+//NOTICE：对象表达式还可以用于直接创建一个匿名类
+//FIXME：脚本文件内没法演示sealed classes => KotlinFeatures.kt
+
+val anObject = object {
+    val value = 1
+    val otherValue = 2
+    val someOtherValue = 3
+}
+println("object values:${anObject.value}, ${anObject.otherValue}, ${anObject.someOtherValue}")
+
+//endregion
+
+
+//region 伴生对象 (类似Java中的静态成员)
+
 class MyClass {
-    companion object Factory {
+
+    object MyObject {                        // 1
+        fun create(): MyClass = MyClass()
+    }
+
+    companion object Factory {               // 2
         fun create(): MyClass = MyClass()
     }
 }
 
-//通过类的伴生对象来调用
+//通过 类内部的对象 来调用
+val myObject = MyClass.MyObject.create()
+println("myObject $myObject")
+
+//通过 类的伴生对象 来调用
 var myClass = MyClass.Factory.create()
+println("myClass $myClass")
 
-//通过类名来调用，这种情况下看起来就像Java中的静态成员，但在运行时它们仍然是真实对象的实例成员
-myClass = MyClass.create()
+//通过 类名 来调用
+myClass = MyClass.create()                    // 3
+println("myClass $myClass")
 
-//伴生对象的名称可以省略，这种情况下将使用默认名称 Companion
-//myClass = MyClass.Companion.create()
+//1、类内部的 对象声明 可以用 companion 关键字标记成为伴生对象，伴生对象可以设置名称，默认是Companion
+//2、类内部可以有多个对象声明，但是只能有一个伴生对象("伴侣唯一制")，伴生对象也一定要在class内部声明才行
+//3、伴生对象的方法和属性可以直接通过类名来调用，这种情况下看起来就像Java中的静态成员，但在运行时它们仍然是真实对象的实例成员
 
 //endregion
+
 
 //endregion

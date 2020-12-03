@@ -23,7 +23,6 @@ val j = a + b            //3
 //d = 5                  //4 Val cannot be reassigned
 //i = f                  //5 Type mismatch: inferred type is Double but Int was expected
 
-
 //1：在Kotlin中任何东西都是对象，函数也是对象
 //2：显式转换，数值类型(Number)的子类都支持toByte/toInt/toLong等显式转换
 //3：数值类型都支持基本的数值运算操作(+ - * / %)，其他类型通过运算符函数重载也能支持
@@ -32,6 +31,7 @@ val j = a + b            //3
 
 //endregion
 
+//NOTICE：切到Null Safety
 
 //region 数组类型
 
