@@ -1,6 +1,5 @@
 package com.tencent.kotlin
 
-import android.nfc.Tag
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
@@ -101,15 +100,23 @@ fun testCallJavaFromKotlin() {
 
     //调用Java类中的静态方法(Kotlin代码中只能通过类来调用)
     JavaDemo.testStaticFunction()
+
+    //创建KotlinDemo对象，可以不传入默认参数name
+    val kotlinDemo1 = KotlinDemo(1)
+    val kotlinDemo2 = KotlinDemo(2, "java")
 }
 
-class KotlinDemo(val id:Int, val name:String) {
+//演示几个注解的作用
+class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String = "kotlin") {
 
     companion object {
-        val TAG = "KotlinDemo"
 
-        fun testStaticFunction() {
+        @JvmStatic fun testStaticFunction() {
             //do nothing
+        }
+
+        fun testNonStaticFunction() {
+
         }
     }
 

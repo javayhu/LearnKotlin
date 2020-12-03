@@ -11,13 +11,20 @@ public class JavaDemo {
 
     //region Kotlin-Java Interoperability
     public static void testCallKotlinFromJava() {
-        KotlinDemo kotlinDemo = new KotlinDemo(1, "kotlin");
-        int id = kotlinDemo.getId();
-        String name = kotlinDemo.getName();
+        //1、创建KotlinDemo对象，如果没有用@JvmOverloads标识那么创建对象需要传入所有的构造方法参数
+        KotlinDemo kotlinDemo1 = new KotlinDemo(1);
+        KotlinDemo kotlinDemo2 = new KotlinDemo(2, "java");
 
-        //调用静态方法或属性
-        KotlinDemo.Companion.getTAG();
-        KotlinDemo.Companion.testStaticFunction();
+        //2、调用静态方法，没有用@JvmStatic修饰方法的话就只能通过伴生对象Companion来调用
+        KotlinDemo.testStaticFunction();
+        KotlinDemo.Companion.testNonStaticFunction();
+
+        //3、调用类的属性方法getter/setter，没有用@JvmField修饰id属性的话就需要调用getId和setId方法
+        KotlinDemo kotlinDemo = new KotlinDemo(3, "php");
+        //int id = kotlinDemo.getId();
+        //kotlinDemo.setId(4);
+        int id = kotlinDemo.id;
+        kotlinDemo.id = 4;
     }
 
     public void testParamNullableFunction(@Nullable String newName) {
