@@ -44,7 +44,11 @@ numbers.forEach { println(it) } //高阶函数
 val numbers2 = IntArray(5)
 val numbers3 = IntArray(5) { 32 }
 val numbers4 = IntArray(6, { it * 2 })
-numbers4.forEach { println(it) }
+val numbers5 = IntArray(6, { x -> x * 2 })
+val numbers6 = IntArray(6) {
+    it * 2
+}
+numbers6.forEach { println(it) }
 
 //endregion
 
@@ -123,12 +127,14 @@ println(max)
 val min = list.minOrNull()
 println(min)
 
-//sorted等等
+//sorted、sortedDescending
 val sortedList = list.sorted()
 println(sortedList)
 
 val sortedDescendingList = list.sortedDescending()
 println(sortedDescendingList)
+
+//还有count、all、any、find、distinct、groupBy等等操作
 
 //endregion
 

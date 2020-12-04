@@ -68,17 +68,20 @@ println("user id:$id, name:$name")
 //Kotlin中可以将一个类声明为sealed，那么这个类是可以被继承的，而且继承它的子类都在这个sealed类声明的文件里面
 //Once you declare a class sealed, it can only be subclassed from inside the same file where the sealed class is declared.
 
-sealed class Mammal(val name: String)
-class Cat(val catName: String) : Mammal(catName)
-class Human(val humanName: String) : Mammal(humanName)
+sealed class Response
+class Success(val message:String):Response()
+class Failure(val error:Int):Response()
 
-fun greetMammal(mammal: Mammal): String {
-    when (mammal) {
-        is Human -> return "Hello ${mammal.name}"
-        is Cat -> return "Hello ${mammal.name}"
+fun handleResponse(response:Response) {
+    when (response) {
+        is Success -> {
+            println("success message:${response.message}")
+        }
+        is Failure -> {
+            println("failure error:${response.error}")
+        }
     }
 }
-greetMammal(Human("javayhu"))
 //error: a 'return' expression required in a function with a block body ('{...}')
 //FIXME：脚本文件内没法演示sealed classes => KotlinDemo.kt
 

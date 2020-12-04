@@ -49,14 +49,18 @@ class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String
 
 //region sealed classes
 
-sealed class Mammal(val name: String)
-class Cat(val catName: String) : Mammal(catName)
-class Human(val humanName: String) : Mammal(humanName)
+sealed class Response
+class Success(val message:String):Response()
+class Failure(val error:Int):Response()
 
-fun greetMammal(mammal: Mammal): String {
-    when (mammal) {
-        is Human -> return "Hello ${mammal.name}"
-        is Cat -> return "Hello ${mammal.name}"
+fun handleResponse(response:Response) {
+    when (response) {
+        is Success -> {
+            println("success message:${response.message}")
+        }
+        is Failure -> {
+            println("failure error:${response.error}")
+        }
     }
 }
 //sealed classed/enum搭配when表达式可以在编译时就知道条件语句是否完整
