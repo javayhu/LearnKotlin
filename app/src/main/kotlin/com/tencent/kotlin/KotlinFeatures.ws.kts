@@ -3,19 +3,21 @@
 
 //region Null Safety
 
-//Kotlin的类型系统为了消除NPE将非空类型(例如String)和可空类型(例如String?)进行了区分
+//Kotlin的类型系统为了消除NPE特意将非空类型(例如String)和可空类型(例如String?)进行了区分
 
 var a: String = "abc"           // 普通的初始化意味着不为null
 //a = null                      // 编译时报错
+println(a)
 
 var b: String? = "abc"          // b可以为null
 b = null                        // 编译时不报错
 println(b)
 
+
 val la = a.length
 //val lb = b.length             //编译时报错
 
-//在Kotlin中，对于可空类型要想进行调用的话有三种方式
+//在Kotlin中，对于可空类型要想进行调用的话有三种方式 (同Swift)
 //1、判空
 val lb = if (b != null) b.length else -1
 println("lb:$lb")

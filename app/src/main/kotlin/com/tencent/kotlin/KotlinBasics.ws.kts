@@ -71,4 +71,66 @@ println("first element in message is ${message[0]}")
 //endregion
 
 
+//region Collections
+
+//List
+val mutableList = mutableListOf(1, 2, 3)
+mutableList.add(4)
+println(mutableList)
+
+val list = listOf(4, 3, 2, 1)
+//list.add(5)      //compilation error
+println(list)
+
+println(mutableList == list)
+
+//Set
+val mutableSet = mutableSetOf(1, 2, 3)
+mutableSet.add(4)
+println(mutableSet)
+
+val set = setOf(4, 3, 2, 1)
+//set.add(5)      //compilation error
+println(set)
+
+println(mutableSet == set)
+
+//Map
+val mutableMap = mutableMapOf("id" to "1", "name" to "kotlin")
+mutableMap.put("company", "JetBrains")
+println(mutableMap)
+
+val map = mapOf("id" to "1", "company" to "JetBrains", "name" to "kotlin")
+//map.put("company" to "JetBrains")        //compilation error
+println(map)
+
+println(mutableMap == map)
+
+//Collection operations
+
+//filter
+val evenList = list.filter { it % 2 == 0 }
+println(evenList)
+
+//map
+val doubleSet = set.map { it * 2 }
+println(doubleSet)
+
+//max、min
+val max = list.maxOrNull()
+println(max)
+
+val min = list.minOrNull()
+println(min)
+
+//sorted等等
+val sortedList = list.sorted()
+println(sortedList)
+
+val sortedDescendingList = list.sortedDescending()
+println(sortedDescendingList)
+
+//endregion
+
+
 //endregion

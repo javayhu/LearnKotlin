@@ -1,6 +1,6 @@
 //region Kotlin基础6-其他特性
 
-//region Equality Checks
+//region Equality Checks (结构相等 还是 引用相等)
 
 //Kotlin uses == for structural comparison and === for referential comparison.
 
@@ -12,7 +12,7 @@ println(authors === writers)  // 2 authors and writers are distinct references
 
 //Andrey Breslav
 //Collections are compared structurally, while arrays are not.
-//for arrarys, equals() simply resorts to referential equality: this === other.
+//for arrays, equals() simply resorts to referential equality: this === other.
 
 val array1 = arrayOf(1, 2, 3, 4, 5)
 val array2 = arrayOf(5, 4, 3, 2, 1)

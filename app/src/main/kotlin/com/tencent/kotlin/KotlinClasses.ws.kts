@@ -51,13 +51,13 @@ class Triangle : Shape() {
 
 //region 特殊类1：data classes
 
-//Kotlin中的数据类(data class)类似Java中的POJO，Kotlin自动生成getter/setter/toString/hashCode/equals/componenN等方法
+//Kotlin中的数据类(data class)类似Java中的POJO => Customer类对比
 
-data class User(val id: Int, val name: String)
+data class Customer(val id: Int, val name: String)
 
-fun createUser(id: Int, name: String) = User(id, name)
+fun createCustomer(id: Int, name: String) = Customer(id, name)
 
-val (id, name) = createUser(1, "javayhu")
+val (id, name) = createCustomerr(1, "kotlin")
 println("user id:$id, name:$name")
 
 //endregion
@@ -80,12 +80,12 @@ fun greetMammal(mammal: Mammal): String {
 }
 greetMammal(Human("javayhu"))
 //error: a 'return' expression required in a function with a block body ('{...}')
-//FIXME：脚本文件内没法演示sealed classes => KotlinFeatures.kt
+//FIXME：脚本文件内没法演示sealed classes => KotlinDemo.kt
 
 //endregion
 
 
-//region 单例模式（对象声明）
+//region 单例模式（对象声明）=> 切到Singleton类
 
 object DatabaseManager {
     init {
@@ -98,6 +98,7 @@ object DatabaseManager {
 }
 DatabaseManager.init()
 DatabaseManager.init()
+
 //1、在Kotlin中实现单例模式极其简单，将类声明改为对象声明即可
 //2、对象声明的初始化过程是线程安全的并且在首次访问时执行
 //3、object可以理解为 "只有一个实例对象的类"
@@ -141,7 +142,7 @@ button.triggerClick()
 
 
 //NOTICE：对象表达式还可以用于直接创建一个匿名类
-//FIXME：脚本文件内没法演示sealed classes => KotlinFeatures.kt
+//FIXME：脚本文件内没法演示sealed classes => KotlinDemo.kt
 
 val anObject = object {
     val value = 1

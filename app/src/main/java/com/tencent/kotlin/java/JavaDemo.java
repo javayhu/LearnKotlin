@@ -1,7 +1,9 @@
-package com.tencent.kotlin;
+package com.tencent.kotlin.java;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.tencent.kotlin.kotlin.KotlinDemo;
 
 public class JavaDemo {
 

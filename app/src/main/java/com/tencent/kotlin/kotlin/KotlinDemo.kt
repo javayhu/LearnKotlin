@@ -1,17 +1,47 @@
-package com.tencent.kotlin
+package com.tencent.kotlin.kotlin
 
+import com.tencent.kotlin.java.JavaDemo
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-//region data classes
 
-data class User(val id:Int, val name:String)
+//region  Kotlin-Java Interoperability
 
-fun createUser(id: Int, name: String) = User(id, name)
+val javaDemo = JavaDemo(1, "kotlin")
 
-fun testDataClass() {
-    val (id, name) = createUser(1, "javayhu")
-    println("user id:$id, name:$name")
+fun testCallJavaFromKotlin() {
+    println("java demo id:${javaDemo.id}, name:${javaDemo.name}")
+
+    //调用参数可以为空的Java函数
+    javaDemo.testParamNullableFunction("kotlin")
+    javaDemo.testParamNullableFunction(null)
+
+    //调用参数不可以为空的Java函数
+    javaDemo.testParamNotNullFunction("kotlin")
+    //javaDemo.testParamNotNullFunction(null)
+
+    //调用Java类中的静态方法(Kotlin代码中只能通过类来调用)
+    JavaDemo.testStaticFunction()
+
+    //创建KotlinDemo对象，可以不传入默认参数name
+    val kotlinDemo1 = KotlinDemo(1)
+    val kotlinDemo2 = KotlinDemo(2, "java")
+}
+
+//演示几个注解的作用
+class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String = "kotlin") {
+
+    companion object {
+
+        @JvmStatic fun testStaticFunction() {
+            //do nothing
+        }
+
+        fun testNonStaticFunction() {
+
+        }
+    }
+
 }
 
 //endregion
@@ -29,6 +59,7 @@ fun greetMammal(mammal: Mammal): String {
         is Cat -> return "Hello ${mammal.name}"
     }
 }
+//sealed classed/enum搭配when表达式可以在编译时就知道条件语句是否完整
 
 //endregion
 
@@ -79,48 +110,6 @@ fun testNoInlineFunction(body: () -> Unit) {
 //2、inline修饰符的作用是告诉编译器：将函数的实现代码直接复制到函数调用的地方而不要创建多余的Function类对象
 //3、如果你的inline function中有某个参数是不希望inline的，那么可以将其声明为noinline
 //4、noinline的函数可以随便使用，而inline函数只能被调用不能被传递
-
-//endregion
-
-
-//region  Kotlin-Java Interoperability
-
-val javaDemo = JavaDemo(1, "javayhu")
-
-fun testCallJavaFromKotlin() {
-    println("java demo id:${javaDemo.id}, name:${javaDemo.name}")
-
-    //调用参数可以为空的Java函数
-    javaDemo.testParamNullableFunction("kotlin")
-    javaDemo.testParamNullableFunction(null)
-
-    //调用参数不可以为空的Java函数
-    javaDemo.testParamNotNullFunction("kotlin")
-    //javaDemo.testParamNotNullFunction(null)
-
-    //调用Java类中的静态方法(Kotlin代码中只能通过类来调用)
-    JavaDemo.testStaticFunction()
-
-    //创建KotlinDemo对象，可以不传入默认参数name
-    val kotlinDemo1 = KotlinDemo(1)
-    val kotlinDemo2 = KotlinDemo(2, "java")
-}
-
-//演示几个注解的作用
-class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String = "kotlin") {
-
-    companion object {
-
-        @JvmStatic fun testStaticFunction() {
-            //do nothing
-        }
-
-        fun testNonStaticFunction() {
-
-        }
-    }
-
-}
 
 //endregion
 
