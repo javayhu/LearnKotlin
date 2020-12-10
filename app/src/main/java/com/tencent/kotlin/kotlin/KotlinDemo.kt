@@ -5,12 +5,16 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 
-//region  Kotlin-Java Interoperability
+//region  Kotlin-Java互操作 (先)
 
 val javaDemo = JavaDemo(1, "kotlin")
 
+//在Kotlin中调用Java
 fun testCallJavaFromKotlin() {
     println("java demo id:${javaDemo.id}, name:${javaDemo.name}")
+
+    //调用Java类中的静态方法(Kotlin代码中只能通过类来调用)
+    JavaDemo.testStaticFunction()
 
     //调用参数可以为空的Java函数
     javaDemo.testParamNullableFunction("kotlin")
@@ -20,20 +24,20 @@ fun testCallJavaFromKotlin() {
     javaDemo.testParamNotNullFunction("kotlin")
     //javaDemo.testParamNotNullFunction(null)
 
-    //调用Java类中的静态方法(Kotlin代码中只能通过类来调用)
-    JavaDemo.testStaticFunction()
-
     //创建KotlinDemo对象，可以不传入默认参数name
     val kotlinDemo1 = KotlinDemo(1)
     val kotlinDemo2 = KotlinDemo(2, "java")
 }
 
 //演示几个注解的作用
-class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String = "kotlin") {
+class KotlinDemo @JvmOverloads constructor(
+    @JvmField var id: Int,
+    val name: String = "kotlin"
+) {
 
     companion object {
-
-        @JvmStatic fun testStaticFunction() {
+        @JvmStatic
+        fun testStaticFunction() {
             //do nothing
         }
 
@@ -41,7 +45,6 @@ class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String
 
         }
     }
-
 }
 
 //endregion
@@ -49,11 +52,11 @@ class KotlinDemo @JvmOverloads constructor(@JvmField var id:Int, val name:String
 
 //region sealed classes
 
-sealed class Response
-class Success(val message:String):Response()
-class Failure(val error:Int):Response()
+sealed class Response  //换成open试下
+class Success(val message: String) : Response()
+class Failure(val error: Int) : Response()
 
-fun handleResponse(response:Response) {
+fun handleResponse(response: Response) {
     when (response) {
         is Success -> {
             println("success message:${response.message}")
@@ -63,29 +66,14 @@ fun handleResponse(response:Response) {
         }
     }
 }
-//sealed classed/enum搭配when表达式可以在编译时就知道条件语句是否完整
+//sealed classed搭配when表达式可以在编译时就知道条件语句是否完整，Java的switch语句是做不到的
 
 //endregion
 
 
-//region Object Expression
+//region inline functions (演示过程先跳过)
 
-fun testObjectExpression() {
-    val anObject = object {
-        val value = 1
-        val otherValue = 2
-        val someOtherValue = 3
-    }
-    println("object values:${anObject.value}, ${anObject.otherValue}, ${anObject.someOtherValue}")
-}
-//TODO：为什么将object声明从function中提出来就不行了? 匿名对象不能在top-level声明
-
-//endregion
-
-
-//region inline functions
-
-inline fun lock(lock:Lock, body: () -> Unit) {                            // 1、2
+inline fun lock(lock: Lock, body: () -> Unit) {                            // 1、2
     lock.lock()
     try {
         body()
@@ -118,7 +106,7 @@ fun testNoInlineFunction(body: () -> Unit) {
 //endregion
 
 
-//region Lambda Functions
+//region Lambda Functions (演示过程先跳过)
 
 // All examples create a function object that performs upper-casing. it's a function from String to String
 
@@ -143,3 +131,4 @@ fun testLambdaFunctions() {
 }
 
 //endregion
+

@@ -1,4 +1,7 @@
+import kotlin.reflect.KProperty
+
 //region Kotlin基础6-其他特性
+
 
 //region Equality Checks (结构相等 还是 引用相等)
 
@@ -23,6 +26,47 @@ println(array1 === array2)    // false
 //endregion
 
 
+//region 属性代理(Delegated Properties)
+
+//Kotlin provides a mechanism of delegated properties that allows delegating the calls of the property set and get methods to a certain object.
+
+class Delegate() {
+    operator fun getValue(thisRef: Any?, prop: KProperty<*>): String {
+        return "$thisRef, thank you for delegating '${prop.name}' to me!"
+    }
+
+    operator fun setValue(thisRef: Any?, prop: KProperty<*>, value: String) {
+        println("$value has been assigned to ${prop.name} in $thisRef")
+    }
+}
+
+class Example {
+
+    var str: String by Delegate() //将str的get/set调用委托给Delegate()对象去实现，关键词by
+
+    override fun toString() = "Example Class"
+}
+
+//Kotlin标准库中内置了一些delegates，最常用的就是lazy，用于实现懒初始化
+
+class LazyProperty() {
+    val lazyValue: Int by lazy { //这里lazy其实就是一个 top-level high order function
+        println("call lazy function")
+        initializer()
+    }
+
+    fun initializer(): Int {
+        return 3
+    }
+}
+
+val lazyProperty = LazyProperty()
+println(lazyProperty.lazyValue)
+println(lazyProperty.lazyValue)
+
+//endregion
+
+
 // region IntegerCache
 
 val a: Int = 127
@@ -38,3 +82,5 @@ println(boxedB === anotherBoxedB) // false
 
 //endregion
 
+
+//endregion

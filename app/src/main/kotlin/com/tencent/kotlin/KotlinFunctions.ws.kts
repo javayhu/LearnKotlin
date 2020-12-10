@@ -1,3 +1,6 @@
+/**
+ * https://kotlinlang.org/docs/reference/functions.html
+ */
 
 //region Kotlin基础3-函数
 
@@ -5,15 +8,11 @@
 
 //NOTICE：函数是Kotlin中的"一等公民"，函数可以直接在文件顶层声明，不用写在类中
 fun add(a: Int, b: Int): Int {
-    return a + b
+    return a + b //TODO：简化
 }
 
 var c = add(1, 2)
-
-//NOTICE：Kotlin 1.3之后main函数可以不用写参数了
-fun main() {
-    println("hello world")
-}
+println(c)
 
 //endregion
 
@@ -22,11 +21,11 @@ fun main() {
 
 //NOTICE：Kotlin支持具名参数，所以可变数量的参数可以不是函数的最后一个参数
 fun format(
-    str: String,
+    origin: String,
     vararg suffix: String,
     upperCase: Boolean = false
 ): String {
-    var res = str
+    var res = origin
     suffix.forEach { res = res.plus(it) }
     res = if (upperCase) res.toUpperCase() else res
     return res
@@ -41,25 +40,7 @@ format("hello", suffix = *arrayOf("kotlin", "world"))
 //endregion
 
 
-//region 函数类型
-
-//1、不带接收者的函数类型：例如(A, B) -> C 表示 接收类型分别为 A 与 B 两个参数并返回一个 C 类型值的函数
-val printStringNTimesFun1: (String, Int) -> String = { str, times -> str.repeat(times)}
-
-println("printStringNTimesFun1:" + printStringNTimesFun1("hello", 3))
-//println("printStringNTimesFun1:" + "hello".printStringNTimesFun1(3))
-
-//2、带接收者的函数类型：例如A.(B) -> C 表示 可以在 A 的接收者对象上调用输入类型为 B 的参数的方法并返回一个 C 类型值的函数
-val printStringNTimesFun2: String.(Int) -> String = { times -> this.repeat(times) }
-
-println("printStringNTimesFun2:" + "hello".printStringNTimesFun2(3))
-
-//带接收者的函数类型可以作为不带接收者的函数类型被调用，只需要将接收者作为第一个参数即可
-println("printStringNTimesFun2:" + printStringNTimesFun2("hello", 3))
-
-//3、suspend函数类型：例如suspend (A, B) -> C，用于协程场景 (暂时不表)
-
-//endregion
+//region 特殊函数 (演示过程先跳过)
 
 
 //region 特殊函数1：extension functions (扩展函数)
@@ -119,37 +100,10 @@ val mulResult = calculate(4, 5) { a, b -> a * b }
 
 println("sumResult $sumResult, mulResult $mulResult")
 
-//将函数作为返回值的函数
-fun operation(): (Int, Int) -> Int {
-    return { a, b -> a + b }
-}
-
-val result1 = operation()(3, 4)
-val result2 = calculate(3, 4, operation())
-
-println("result1 $result1, result2 $result2")
-
 //endregion
 
 
-//region 特殊函数4：infix functions
-//https://kotlinlang.org/docs/reference/functions.html#infix-notation
-//Functions marked with the infix keyword can also be called using the infix notation (omitting the dot and the parentheses for the call)
-
-infix fun Int.times(str: String) = str.repeat(this)
-println(2 times "Bye ")
-
-infix fun String.times(number: Int) = this.repeat(number)
-println("Bye " times 2)
-
-val kvPair = "name" to "javayhu"
-val map = mapOf(kvPair, "company" to "tencent")
-println(map)
-
-//endregion
-
-
-//region 特殊函数5：operator functions
+//region 特殊函数4：operator functions (运算符重载函数)
 
 operator fun Int.times(str: String) = str.repeat(this)
 println(2 * "Bye ")
@@ -160,7 +114,7 @@ println("Bye " * 2)
 //endregion
 
 
-//region 特殊函数6：scope functions
+//region 特殊函数5：scope functions
 //https://kotlinlang.org/docs/reference/scope-functions.html
 
 //1、Kotlin标准库中包含了一些这样的函数，它们的目的是针对某个对象创建一个"临时空间"(lambda语句块)，然后执行这段代码，在这个临时空间内可以不用使用变量名来访问这个对象
@@ -177,8 +131,8 @@ printNonNull(null)
 printNonNull("string for let function")
 
 //② run：跟let类似，但是它内部使用this引用对象，返回值是lambda表达式的结果
-fun getNullableLength(ns: String?) {
-    ns?.run {
+fun getNullableLength(nullableStr: String?) {
+    nullableStr?.run {
         println("$this length = $length")
         length
     }
@@ -188,24 +142,24 @@ getNullableLength("")
 getNullableLength("string for run function")
 
 //③ with：内部使用this引用对象，返回值是lambda表达式的结果
-data class Configuration(var host:String, var port:Int)
+data class Configuration(var host: String, var port: Int)
+
 val configuration = Configuration("127.0.0.1", 12345)
 
-val pair = "first" to "second"
-//println("${pair.host}:${pair.port}")
-val withPair = with(pair) {
-    println("$first:$second")
+val withPair = with(configuration) {
+    println("$host:$port")
 }
 
 //④ apply：内部使用this引用对象，返回值是调用对象本身，常用于需要给对象的多个属性赋值的场景
-val applyConfiguration = pair.apply {
-    first = "new first"
-    second = "new second"
+val applyConfiguration = configuration.apply {
+    host = "127.0.0.100"
+    port = 8080
 }
+println(applyConfiguration)
 
 //⑤ also：内部使用it引用对象，返回值是调用者本身，常用于需要做些side effect的场景(例如打日志)
-val alsoConfiguration = pair.also {
-    println("${it.first}:${it.second}")
+val alsoConfiguration = configuration.also {
+    println("${it.host}:${it.port}")
 }
 
 //链起来
@@ -219,6 +173,54 @@ val chainConfiguration = configuration.apply {
     it
 }
 println("${chainConfiguration.host}:${chainConfiguration.port}")
+
+//endregion
+
+
+//region 特殊函数6：inline functions
+
+//切到KotlinDemo.kt
+
+//endrgion
+
+
+//region 特殊函数7：infix functions (演示过程先跳过)
+//https://kotlinlang.org/docs/reference/functions.html#infix-notation
+//Functions marked with the infix keyword can also be called using the infix notation (omitting the dot and the parentheses for the call)
+
+infix fun Int.times(str: String) = str.repeat(this)
+println(2 times "Bye ")
+
+infix fun String.times(number: Int) = this.repeat(number)
+println("Bye " times 2)
+
+val kvPair = "name" to "javayhu"
+val map = mapOf(kvPair, "company" to "tencent")
+println(map)
+
+//endregion
+
+
+//endregion
+
+
+//region 函数类型 (演示过程先跳过)
+
+//1、不带接收者的函数类型：例如(A, B) -> C 表示 接收类型分别为 A 与 B 两个参数并返回一个 C 类型值的函数
+val printStringNTimesFun1: (String, Int) -> String = { str, times -> str.repeat(times) }
+
+println("printStringNTimesFun1:" + printStringNTimesFun1("hello", 3))
+//println("printStringNTimesFun1:" + "hello".printStringNTimesFun1(3))
+
+//2、带接收者的函数类型：例如A.(B) -> C 表示 可以在 A 的接收者对象上调用输入类型为 B 的参数的方法并返回一个 C 类型值的函数
+val printStringNTimesFun2: String.(Int) -> String = { times -> this.repeat(times) }
+
+println("printStringNTimesFun2:" + "hello".printStringNTimesFun2(3))
+
+//带接收者的函数类型可以作为不带接收者的函数类型被调用，只需要将接收者作为第一个参数即可
+println("printStringNTimesFun2:" + printStringNTimesFun2("hello", 3))
+
+//3、suspend函数类型：例如suspend (A, B) -> C，用于协程场景 (暂时不表)
 
 //endregion
 

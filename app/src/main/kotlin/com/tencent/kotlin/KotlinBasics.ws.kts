@@ -17,11 +17,19 @@ val f: Double = 3.14
 val g: Char = 'g'
 val h: Boolean = false
 
-val i = d.toInt()        // 2
-val j = a + b            // 3
 
-//d = 5                  // 4 Val cannot be reassigned
+println(a)
+//a = 2                  // 4 Val cannot be reassigned
+
+var va: Byte = 1         // 4
+va = 2
+println(va)
+
+
+val i = 9f.toInt()       // 2、5
+println(i)
 //i = f                  // 5 Type mismatch: inferred type is Double but Int was expected
+
 
 //1：在Kotlin中任何东西都是对象，函数也是对象
 //2：显式转换，数值类型(Number)的子类都支持toByte/toInt/toLong等显式转换
@@ -31,32 +39,14 @@ val j = a + b            // 3
 
 //endregion
 
+
 //NOTICE：切到Null Safety
-
-//region 数组类型
-
-//Array类型
-val numbers = arrayOf(0, 2, 4, 6, 8, 10)
-println("first element in numbers:${numbers[0]}")
-numbers.forEach { println(it) } //高阶函数
-
-//基本类型数组及其初始化：ByteArray, ShortArray, IntArray...
-val numbers2 = IntArray(5)
-val numbers3 = IntArray(5) { 32 }
-val numbers4 = IntArray(6, { it * 2 })
-val numbers5 = IntArray(6, { x -> x * 2 })
-val numbers6 = IntArray(6) {
-    it * 2
-}
-numbers6.forEach { println(it) }
-
-//endregion
 
 
 //region 字符串
 //第一种字符串：转义字符串，它里面可以有转义字符
 var message = "hello world\nfrom kotlin"
-println("short message is $message")
+println("short message is $message")  //字符串模板
 
 //第二种字符串：原始字符串，原始字符串可以包含换行以及任意文本，类似Python的长字符串定义方式
 message = """
@@ -65,17 +55,29 @@ message = """
 """
 println("long message is $message")
 
-//直接在字符串上调用方法 (扩展函数 extension fun)
-message = "hello java".replace("java", "kotlin")
-println(message)
-
-//直接获取字符串特定位置的字符 (操作符重载函数 operator fun：operator fun get(index: Int):Char)
+//直接获取字符串特定位置的字符 (操作符重载函数 operator fun)
 println("first element in message is ${message[0]}")
 
 //endregion
 
 
-//region Collections
+//region 数组类型
+
+//Array类型
+val numbers = arrayOf(0, 2, 4, 6, 8, 10)
+println("first element in numbers:${numbers[0]}")
+numbers.forEach { println(it) }    //高阶函数
+
+//基本类型数组及其初始化：ByteArray, ShortArray, IntArray...
+val numbers2 = IntArray(5)
+val numbers3 = IntArray(5) { 32 }
+val numbers4 = IntArray(6, { it * 2 })
+numbers4.forEach { println(it) }
+
+//endregion
+
+
+//region 集合 (演示过程先跳过)
 
 //List
 val mutableList = mutableListOf(1, 2, 3)
@@ -136,7 +138,7 @@ println(sortedDescendingList)
 
 //还有count、all、any、find、distinct、groupBy等等操作
 
-//endregion
+//endregion (
 
 
 //endregion

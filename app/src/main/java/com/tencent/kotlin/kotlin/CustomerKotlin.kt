@@ -4,4 +4,4 @@ package com.tencent.kotlin.kotlin
 
 data class CustomerKotlin(val id: Int, val name: String)
 
-
+//Decompile

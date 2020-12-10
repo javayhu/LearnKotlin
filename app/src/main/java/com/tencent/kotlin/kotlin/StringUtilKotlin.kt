@@ -3,8 +3,8 @@ package com.tencent.kotlin.kotlin
 class StringUtilKotlin {
 
     companion object {
-        fun getFirstWord(str: String, seperator: String = "_"): String {
-            val index = str.indexOf(seperator)
+        fun getFirstWord(str: String, separator: String = "_"): String {
+            val index = str.indexOf(separator)
             return if (index < 0) str else str.substring(0, index)
         }
     }

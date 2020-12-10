@@ -9,10 +9,12 @@
 //region if表达式
 
 //NOTICE：在Java中if是条件语句，没有返回值；在Kotlin中if是表达式，有返回值的
-var max2 = if (b > a) b else a
+val a = 1
+val b = 2
+var max = if (b > a) b else a
 
 //表达式的最后一行语句的值即为表达式的返回值
-var max3 = if (b > a) {
+var max2 = if (b > a) {
     println("b is bigger")
     b
 } else {
@@ -20,7 +22,7 @@ var max3 = if (b > a) {
     a
 }
 
-println("max is $max, max2 is $max2, max3 is $max3")
+println("max is $max, max2 is $max2")
 
 //endregion
 
@@ -30,7 +32,7 @@ println("max is $max, max2 is $max2, max3 is $max3")
 //NOTICE：在Kotlin中when表达式也是具有返回值的，when的作用类似Java中的switch
 var c = 9
 
-//when表达式可以作用于任何对象
+//when表达式可以作用于任何对象，判断条件可以是比较复杂的判断逻辑
 val message = when (c) {
     0, 1 -> "c is 0 or 1"
     2, 3 -> "c is 2 or 3"
