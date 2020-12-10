@@ -7,9 +7,7 @@
 //region 函数的声明方式
 
 //NOTICE：函数是Kotlin中的"一等公民"，函数可以直接在文件顶层声明，不用写在类中
-fun add(a: Int, b: Int): Int {
-    return a + b //TODO：简化
-}
+fun add(a: Int, b: Int) = a + b
 
 var c = add(1, 2)
 println(c)
@@ -17,7 +15,7 @@ println(c)
 //endregion
 
 
-//region 默认参数，具名参数，可变数量的参数
+//region 默认参数，具名参数，可变数量的参数 (同Python)
 
 //NOTICE：Kotlin支持具名参数，所以可变数量的参数可以不是函数的最后一个参数
 fun format(
@@ -45,7 +43,7 @@ format("hello", suffix = *arrayOf("kotlin", "world"))
 
 //region 特殊函数1：extension functions (扩展函数)
 
-//NOTICE：Kotlin 能够扩展一个类的新功能而无需继承该类或者使用像装饰者这样的设计模式
+//Kotlin能够扩展一个类的新功能而无需继承该类或者使用像装饰者这样的设计模式
 //例如，你可以为一个你不能修改的、来自第三方库中的类编写一个新的函数。这个新增的函数就像那个原始类本来就有的函数一样，可以用普通的方法调用
 
 //扩展函数的写法，扩展函数定义的内部可以直接调用被扩展类内部定义的方法
@@ -60,50 +58,7 @@ println(firstWord)
 //endregion
 
 
-//region 特殊函数2：inner functions (内部函数)
-
-//在Kotlin中函数内部可以定义内部函数，局部函数可以访问外部函数的局部变量
-class Vertex {
-    val neighbors: List<Vertex> = emptyList()
-}
-
-class Graph {
-    val vertices: List<Vertex> = emptyList()
-}
-
-fun dfs(graph: Graph) {
-    val visited = HashSet<Vertex>()
-
-    fun dfs(current: Vertex) {
-        if (!visited.add(current)) return
-        for (v in current.neighbors)
-            dfs(v)
-    }
-
-    dfs(graph.vertices[0])
-}
-
-//endregion
-
-
-//region 特殊函数3：high order functions (高阶函数)
-
-//在Kotlin中，一个函数可以作为另一个函数的参数或者返回值
-fun calculate(x: Int, y: Int, operation: (Int, Int) -> Int): Int {
-    return operation(x, y)
-}
-
-val sumResult = calculate(4, 5, { a, b -> a + b })
-
-//当lambda表达式作为函数调用的最后一个参数的时候，可以将它挪出来
-val mulResult = calculate(4, 5) { a, b -> a * b }
-
-println("sumResult $sumResult, mulResult $mulResult")
-
-//endregion
-
-
-//region 特殊函数4：operator functions (运算符重载函数)
+//region 特殊函数2：operator functions (运算符重载函数)
 
 operator fun Int.times(str: String) = str.repeat(this)
 println(2 * "Bye ")
@@ -114,10 +69,10 @@ println("Bye " * 2)
 //endregion
 
 
-//region 特殊函数5：scope functions
+//region 特殊函数3：scope functions
 //https://kotlinlang.org/docs/reference/scope-functions.html
 
-//1、Kotlin标准库中包含了一些这样的函数，它们的目的是针对某个对象创建一个"临时空间"(lambda语句块)，然后执行这段代码，在这个临时空间内可以不用使用变量名来访问这个对象
+//1、Kotlin标准库中包含了一些函数，目的是针对某个对象创建一个"临时空间"(lambda语句块)，然后执行这段代码，在这个临时空间内可以不用使用变量名来访问这个对象
 //2、这些函数的共同点是都是在一个对象上执行一段代码，不同点是这个对象在代码块中如何引用以及这个代码块的返回值是什么
 //3、这样的函数主要有5个，分别是 let, run, with, apply, also
 
@@ -141,7 +96,7 @@ getNullableLength(null)
 getNullableLength("")
 getNullableLength("string for run function")
 
-//③ with：内部使用this引用对象，返回值是lambda表达式的结果
+//③ with：跟run类似，内部使用this引用对象，返回值是lambda表达式的结果
 data class Configuration(var host: String, var port: Int)
 
 val configuration = Configuration("127.0.0.1", 12345)
@@ -162,6 +117,11 @@ val alsoConfiguration = configuration.also {
     println("${it.host}:${it.port}")
 }
 
+
+println(2.run {
+    this = 3
+})
+
 //链起来
 val chainConfiguration = configuration.apply {
     host = "127.0.0.1"
@@ -177,7 +137,24 @@ println("${chainConfiguration.host}:${chainConfiguration.port}")
 //endregion
 
 
-//region 特殊函数6：inline functions
+//region 特殊函数4：high order functions (高阶函数)
+
+//在Kotlin中，一个函数可以作为另一个函数的参数或者返回值
+fun calculate(x: Int, y: Int, operation: (Int, Int) -> Int): Int {
+    return operation(x, y)
+}
+
+val sumResult = calculate(4, 5, { a, b -> a + b })
+
+//当lambda表达式作为函数调用的最后一个参数的时候，可以将它挪出来
+val mulResult = calculate(4, 5) { a, b -> a * b }
+
+println("sumResult $sumResult, mulResult $mulResult")
+
+//endregion
+
+
+//region 特殊函数5：inline functions (演示过程可能要先跳过)
 
 //切到KotlinDemo.kt
 
@@ -197,6 +174,34 @@ println("Bye " times 2)
 val kvPair = "name" to "javayhu"
 val map = mapOf(kvPair, "company" to "tencent")
 println(map)
+
+//endregion
+
+//endregion
+
+
+//region 特殊函数6：inner functions (内部函数)
+
+//在Kotlin中函数内部可以定义内部函数，局部函数可以访问外部函数的局部变量
+class Vertex {
+    val neighbors: List<Vertex> = emptyList()
+}
+
+class Graph {
+    val vertices: List<Vertex> = emptyList()
+}
+
+fun dfs(graph: Graph) {
+    val visited = HashSet<Vertex>()
+
+    fun dfs(current: Vertex) {
+        if (!visited.add(current)) return
+        for (v in current.neighbors)
+            dfs(v)
+    }
+
+    dfs(graph.vertices[0])
+}
 
 //endregion
 

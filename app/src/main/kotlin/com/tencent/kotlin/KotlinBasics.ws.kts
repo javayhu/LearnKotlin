@@ -8,44 +8,40 @@
 
 //region 数字类型、字符类型、布尔类型
 
-val a: Byte = 1          // 1
-val b: Short = 2
-val c: Int = 3
-val d: Long = 4L
-val e: Float = 2.718f
-val f: Double = 3.14
-val g: Char = 'g'
-val h: Boolean = false
+var a: Byte = 1          // 1
+var b: Short = 2
+var c: Int = 3
+var d: Long = 4L
+var e: Float = 2.718f
+var f: Double = 3.14
+var g: Char = 'g'
+var h: Boolean = false
 
 
 println(a)
-//a = 2                  // 4 Val cannot be reassigned
+a = 2
 
-var va: Byte = 1         // 4
-va = 2
-println(va)
+val vala: Int = 1
+//vala = 2               // 2 Val cannot be reassigned
+println(vala)
 
 
-val i = 9f.toInt()       // 2、5
+val i = 9                // 3
 println(i)
-//i = f                  // 5 Type mismatch: inferred type is Double but Int was expected
+//i = f                  // Type mismatch: inferred type is Double but Int was expected
 
 
 //1：在Kotlin中任何东西都是对象，函数也是对象
-//2：显式转换，数值类型(Number)的子类都支持toByte/toInt/toLong等显式转换
-//3：数值类型都支持基本的数值运算操作(+ - * / %)，其他类型通过运算符函数重载也能支持
-//4：Kotlin是静态类型编程语言，var表示变量(variable)，val表示常量(value)
-//5：Kotlin支持自动类型推断，可以自动推断变量的类型，也可以自动推断函数返回值
+//2：Kotlin是静态类型编程语言，var表示变量(variable)，val表示常量(value)
+//3：Kotlin支持自动类型推断，可以自动推断变量的类型，也可以自动推断函数返回值
 
 //endregion
 
 
-//NOTICE：切到Null Safety
-
-
 //region 字符串
+
 //第一种字符串：转义字符串，它里面可以有转义字符
-var message = "hello world\nfrom kotlin"
+var message: String = "hello world\nfrom kotlin"
 println("short message is $message")  //字符串模板
 
 //第二种字符串：原始字符串，原始字符串可以包含换行以及任意文本，类似Python的长字符串定义方式
@@ -64,15 +60,51 @@ println("first element in message is ${message[0]}")
 //region 数组类型
 
 //Array类型
-val numbers = arrayOf(0, 2, 4, 6, 8, 10)
+val numbers = arrayOf(0, "china")
 println("first element in numbers:${numbers[0]}")
-numbers.forEach { println(it) }    //高阶函数
+numbers.forEach { println(it) }
 
 //基本类型数组及其初始化：ByteArray, ShortArray, IntArray...
 val numbers2 = IntArray(5)
 val numbers3 = IntArray(5) { 32 }
 val numbers4 = IntArray(6, { it * 2 })
 numbers4.forEach { println(it) }
+
+//endregion
+
+
+//region Null Safety
+
+//Kotlin的类型系统为了消除NPE特意将非空类型(例如String)和可空类型(例如String?)进行了区分
+
+var a: String = "abc"           // 普通的初始化意味着不为null
+//a = null                      // 编译时报错
+println(a)
+
+var b: String? = "abc"          // b可以为null
+b = null                        // 编译时不报错
+println(b)
+
+val la = a.length
+//val lb = b.length             //编译时报错
+
+val vb: String? = "abc"
+
+//在Kotlin中，对于可空类型要想进行调用的话有三种方式 (同Swift)
+
+//1、判空
+//val lbInJava = (null != vb) ? vb.length : -1  //Kotlin不支持
+val lb = if (vb != null) vb.length else -1   //Kotlin的if表达式
+println("lb:$lb")
+
+//2、使用 ?. 操作符
+val lb2 = vb?.length              //编译时不报错，如果b是null那么返回为null，如果b不是null那么返回长度
+val lb3 = vb?.length ?: -1        //如果我们希望在可空类型为空的时候返回一个非null的结果，可以使用 ?: 操作符
+println("lb2:$lb2, lb3:$lb3")
+
+//3、使用 !! 操作符
+val lb4 = vb!!.length             //!!操作符强制将可空类型转成非空类型，但是当b是null的时候就会抛出NPE，谨慎使用
+println("lb4:$lb4")
 
 //endregion
 

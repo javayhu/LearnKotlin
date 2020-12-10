@@ -72,7 +72,6 @@ fetchUserData().observe(viewLifeCycleOwner) { user ->
 
 //LiveData with coroutines
 
-
 //Infamouse roration problem
 
 //Coroutines run "in" a scope

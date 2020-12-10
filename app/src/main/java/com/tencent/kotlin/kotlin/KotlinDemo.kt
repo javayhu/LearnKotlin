@@ -1,6 +1,7 @@
 package com.tencent.kotlin.kotlin
 
 import com.tencent.kotlin.java.JavaDemo
+import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 

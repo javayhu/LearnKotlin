@@ -11,23 +11,6 @@ import kotlin.concurrent.thread
 
 //Coroutines simplify async code by replacing callbacks
 
-data class User(val id:Int, val name:String)
-
-fun fetchUserData():User {
-    thread {
-        //
-    }
-}
-
-
-//region Dream Code
-
-val user = fetchUserData()
-textView.text = user.name
-
-
-//endregion
-
 
 //endregion
 

@@ -14,8 +14,6 @@ public class SingletonJava {
         return SingletonHolder.INSTANCE;
     }
 
-    private String property;
-
     public void init() {
         System.out.println("SingletonJava call init");
     }

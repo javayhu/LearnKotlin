@@ -6,7 +6,7 @@
 
 //region 类的声明方式
 
-//在 Kotlin 中，类声明由类名、类头（指定其类型参数、主构造函数等）以及由花括号包围的类体构成
+//在 Kotlin 中，类声明由访问修饰符、类名、类头（指定其类型参数、主构造函数等）以及由花括号包围的类体构成
 public class Empty constructor() {               // 1、2、3、4
 }
 
@@ -66,7 +66,7 @@ class Triangle : Shape() {
 
 //region 伴生对象
 
-//NOTICE：Java中类有静态成员，Kotlin中没有static如何实现类似功能？
+//NOTICE：Java中类可以有静态成员，Kotlin中没有static如何实现类似功能？
 class MyClass {
 
     companion object Factory {               // 2
@@ -78,17 +78,17 @@ class MyClass {
     }
 }
 
-//通过 类内部的对象 来调用
-val myObject = MyClass.MyObject.create()
-println("myObject $myObject")
+//通过 类名 来调用
+myClass = MyClass.create()                    // 3
+println("myClass $myClass")
 
 //通过 类的伴生对象 来调用
 var myClass = MyClass.Factory.create()
 println("myClass $myClass")
 
-//通过 类名 来调用
-myClass = MyClass.create()                    // 3
-println("myClass $myClass")
+//通过 类内部的对象 来调用
+val myObject = MyClass.MyObject.create()
+println("myObject $myObject")
 
 //1、类内部的 对象声明 可以用 companion 关键字标记成为伴生对象，伴生对象可以设置名称，默认是Companion
 //2、类内部可以有多个对象声明，但是只能有一个伴生对象("伴侣唯一制")，伴生对象也一定要在class内部声明才行
@@ -97,18 +97,18 @@ println("myClass $myClass")
 //endregion
 
 
-//region 特殊类 (演示过程先跳过)
+//region 特殊类
 
 //region 特殊类1：data classes
 
 //Kotlin中的数据类(data class)类似Java中的POJO => Customer类对比
 
-data class Customer(val id: Int, val name: String)
+data class Result(val code: Int, val message: String)
 
-fun createCustomer(id: Int, name: String) = Customer(id, name)
+fun handle() = Result(1, "kotlin")
 
-val (id, name) = createCustomerr(1, "kotlin")   //析构表达式
-println("user id:$id, name:$name")
+val (code, message) = handle()   //析构表达式
+println("result code:$code, message:$message")
 
 //endregion
 
