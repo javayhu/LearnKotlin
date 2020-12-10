@@ -4,11 +4,11 @@
  * basic types used in Kotlin: numbers, characters, booleans, arrays, and strings
  */
 
-//region Kotlin基础1-基本类型
+//region Kotlin基础1-基本类型、集合
 
 //region 数字类型、字符类型、布尔类型
 
-val a: Byte = 1          //1
+val a: Byte = 1          // 1
 val b: Short = 2
 val c: Int = 3
 val d: Long = 4L
@@ -17,11 +17,11 @@ val f: Double = 3.14
 val g: Char = 'g'
 val h: Boolean = false
 
-val i = d.toInt()        //2
-val j = a + b            //3
+val i = d.toInt()        // 2
+val j = a + b            // 3
 
-//d = 5                  //4 Val cannot be reassigned
-//i = f                  //5 Type mismatch: inferred type is Double but Int was expected
+//d = 5                  // 4 Val cannot be reassigned
+//i = f                  // 5 Type mismatch: inferred type is Double but Int was expected
 
 //1：在Kotlin中任何东西都是对象，函数也是对象
 //2：显式转换，数值类型(Number)的子类都支持toByte/toInt/toLong等显式转换
